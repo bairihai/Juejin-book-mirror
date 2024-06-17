@@ -19,7 +19,15 @@ jobs:
     # - name: Replace text in HTML files
     #   run: |
     #     find . -maxdepth 1 -type f -name '*.html' -exec sed -i 's|<img src="./|<img src="https://page.jituc.cn/juejin/Node + React 实战：从 0 到 1 实现记账本/|g' {} +
-      # 在一级目录下的HTML文件中替换指定文本
+    # 在一级目录下的HTML文件中替换指定文本
+
+    - name: Generate index.html
+      run: |
+        echo "<html><body><ul>" > index.html
+        for file in *.html; do
+          echo "<li><a href='https://bairihai.github.io/Juejin-visResumeMook/$file'>$file</a></li>" >> index.html
+        done
+        echo "</ul></body></html>" >> index.html
 
     - name: Create and push to a new branch
       run: |
