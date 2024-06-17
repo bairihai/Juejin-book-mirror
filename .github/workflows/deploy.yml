@@ -29,8 +29,6 @@ jobs:
         git add .
         git commit -m "Automated changes by GitHub Actions"
         git push https://${{ secrets.GH_BRH_REPO_TOKEN }}@github.com/bairihai/Juejin-visResumeMook.git HEAD
-      env:
-        DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
       # 提交更改并推送到新的分支
 
     # - name: Deploy to Server
