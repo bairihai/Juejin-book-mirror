@@ -25,18 +25,13 @@ jobs:
       run: |
         git config --global user.name 'bairihai'
         git config --global user.email '237876867@qq.com'
-        git checkout -b deploy-branch-$(date +%Y%m%d-%H%M)  # 创建以日期和时间命名的新分支
+        git checkout -b gh-pages
         git add .
         git commit -m "Automated changes by GitHub Actions"
         git push https://${{ secrets.GH_BRH_REPO_TOKEN }}@github.com/bairihai/Juejin-visResumeMook.git HEAD
       # 提交更改并推送到新的分支
       # 修改了仓库里的github action权限，再试试呢
-
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v4
-      with:
-        github_token: ${{ secrets.GH_BRH_REPO_TOKEN }}
-        publish_dir: ./  # 这里填写你的构建文件夹路径  
+      # git checkout -b deploy-branch-$(date +%Y%m%d-%H%M)  # 原本是创建以日期和时间命名的新分支，最后可能分支太多，不太好管理，所以就专用一个分支了
 
     # - name: Deploy to Server
     #   uses: appleboy/scp-action@master
