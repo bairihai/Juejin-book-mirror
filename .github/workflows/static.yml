@@ -6,7 +6,7 @@ on:
   push:
     branches: ["gh-pages"]
 
-  # 如果没能自动连锁触发，强制连锁触发。工作流程配置为在generate工作流程完成后运行
+  # 如果没能自动连锁触发，强制连锁触发。工作流程配置为在generate工作流程完成后运行。参考资料：docs.github.com/zh/actions/using-workflows/events-that-trigger-workflows#workflow_run
   workflow_run:
     workflows: [Process HTML and Deploy]
     types:
@@ -37,6 +37,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: gh-pages        
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
