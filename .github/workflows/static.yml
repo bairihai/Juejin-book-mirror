@@ -6,6 +6,12 @@ on:
   push:
     branches: ["gh-pages"]
 
+  # 如果没能自动连锁触发，强制连锁触发。工作流程配置为在generate工作流程完成后运行
+  workflow_run:
+    workflows: [Process HTML and Deploy]
+    types:
+      - completed
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
