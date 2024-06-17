@@ -28,7 +28,7 @@ jobs:
         git checkout -b deploy-branch-$(date +%Y-%m-%d)  # 创建以日期命名的新分支
         git add .
         git commit -m "Automated changes by GitHub Actions"
-        ssh-agent sh -c 'ssh-add <(echo "$DEPLOY_KEY"); git push git@github.com:bairihai/Juejin-visResumeMook.git HEAD'
+            bash -c 'ssh-agent sh -c "ssh-add <(echo \"$DEPLOY_KEY\"); git push git@github.com:bairihai/Juejin-visResumeMook.git HEAD"'
       env:
         DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
       # 提交更改并推送到新的分支
