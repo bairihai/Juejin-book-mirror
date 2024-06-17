@@ -2,7 +2,7 @@
 name: Deploy static content to Pages
 
 on:
-  # 在generate完成后，会推送到这个分支，之后只需要连锁触发部署到github pages
+  # 在generate完成后，会强制推送到这个分支，之后只需要连锁触发部署到github pages
   push:
     branches: ["gh-pages"]
 

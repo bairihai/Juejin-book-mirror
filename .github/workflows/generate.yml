@@ -28,9 +28,9 @@ jobs:
         git checkout -b gh-pages
         git add .
         git commit -m "Automated changes by GitHub Actions"
-        git push https://${{ secrets.GH_BRH_REPO_TOKEN }}@github.com/bairihai/Juejin-visResumeMook.git HEAD
-      # 提交更改并推送到新的分支
-      # 修改了仓库里的github action权限，再试试呢
+        git push -f https://${{ secrets.GH_BRH_REPO_TOKEN }}@github.com/bairihai/Juejin-visResumeMook.git HEAD
+      # 提交更改并强制推送到新的分支
+      # 需要先修改仓库里的github action权限
       # git checkout -b deploy-branch-$(date +%Y%m%d-%H%M)  # 原本是创建以日期和时间命名的新分支，最后可能分支太多，不太好管理，所以就专用一个分支了
 
     # - name: Deploy to Server
