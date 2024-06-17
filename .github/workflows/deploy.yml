@@ -23,12 +23,12 @@ jobs:
 
     - name: Create and push to a new branch
       run: |
-        git config --global user.name 'bairihai-auto'
+        git config --global user.name 'bairihai'
         git config --global user.email '237876867@qq.com'
         git checkout -b deploy-branch-$(date +%Y-%m-%d)  # 创建以日期命名的新分支
         git add .
         git commit -m "Automated changes by GitHub Actions"
-            bash -c 'ssh-agent sh -c "ssh-add <(echo \"$DEPLOY_KEY\"); git push git@github.com:bairihai/Juejin-visResumeMook.git HEAD"'
+        git push https://${{ secrets.GH_BRH_REPO_TOKEN }}@github.com/bairihai/Juejin-visResumeMook.git HEAD
       env:
         DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
       # 提交更改并推送到新的分支
