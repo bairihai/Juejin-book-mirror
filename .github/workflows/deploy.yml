@@ -16,28 +16,28 @@ jobs:
     - name: Remove JavaScript files
       run: find . -type f -name '*.js' -delete  # 删除所有.js文件
 
-    - name: Replace text in HTML files
-      run: |
-        find . -maxdepth 1 -type f -name '*.html' -exec sed -i 's|<img src="./|<img src="https://page.jituc.cn/juejin/Node + React 实战：从 0 到 1 实现记账本/|g' {} +
+    # - name: Replace text in HTML files
+    #   run: |
+    #     find . -maxdepth 1 -type f -name '*.html' -exec sed -i 's|<img src="./|<img src="https://page.jituc.cn/juejin/Node + React 实战：从 0 到 1 实现记账本/|g' {} +
       # 在一级目录下的HTML文件中替换指定文本
 
     - name: Create and push to a new branch
       run: |
         git config --global user.name 'bairihai-auto'
         git config --global user.email '237876867@qq.com'
-        git checkout -b new-branch-$(date +%Y-%m-%d)  # 创建以日期命名的新分支
+        git checkout -b deploy-branch-$(date +%Y-%m-%d)  # 创建以日期命名的新分支
         git add .
         git commit -m "Automated changes by GitHub Actions"
-        git push origin HEAD  # 推送到新分支
+        git push https://${{ secrets.GH_BRH_REPO_TOKEN }}@github.com/bairihai/Juejin-visResumeMook.git HEAD  # 推送到新分支
       # 提交更改并推送到新的分支
 
-    - name: Deploy to Server
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.PORT }}
-        source: "."
-        target: "/path/on/server"
-      # 使用 SCP 将文件部署到服务器
+    # - name: Deploy to Server
+    #   uses: appleboy/scp-action@master
+    #   with:
+    #     host: ${{ secrets.HOST }}
+    #     username: ${{ secrets.USERNAME }}
+    #     key: ${{ secrets.SSH_KEY }}
+    #     port: ${{ secrets.PORT }}
+    #     source: "."
+    #     target: "/path/on/server"
+    # 使用 SCP 将文件部署到服务器
