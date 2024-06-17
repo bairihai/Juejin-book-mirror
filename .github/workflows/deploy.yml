@@ -28,7 +28,7 @@ jobs:
         git checkout -b deploy-branch-$(date +%Y-%m-%d)  # 创建以日期命名的新分支
         git add .
         git commit -m "Automated changes by GitHub Actions"
-        git push https://${{ secrets.GH_BRH_REPO_TOKEN }}@github.com/bairihai/Juejin-visResumeMook.git HEAD
+        git push https://$ {{ secrets.GH_BRH_REPO_TOKEN }}@github.com/bairihai/Juejin-visResumeMook.git HEAD
       # 提交更改并推送到新的分支
 
     # - name: Deploy to Server
