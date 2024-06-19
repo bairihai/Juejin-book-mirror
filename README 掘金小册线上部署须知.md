@@ -154,7 +154,7 @@ gtihub会保存原本的链接，重定向到新的仓库。
 
 你有很长很长一段时间，留意的时候慢慢改就行了。
 
-### 对action进行迭代以增强其兼容性。
+### ~~对action进行迭代以增强其兼容性。~~（？）
 
 ```bash
 - name: Generate index.html
@@ -253,6 +253,51 @@ gtihub会保存原本的链接，重定向到新的仓库。
 # 生成一个索引文件，列出所有HTML文件的链接，并按目录分类
 ```
 
+### 对action进行迭代，适配多文件夹
+
+……
+
+嘶，好像有点不太对。
+
+
+扔掉了github copilot，改用回我的cursor ai gpt4.0试试吧。
+
+
+这下正确了。
+
+The issue in the script arises from the way filenames are split and added to the [files](file:///e%3A/100%20%E9%A1%B9%E7%9B%AE/130%20%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/132%20%E5%85%B6%E4%BB%96%E4%B8%AD%E6%9C%9F%E6%88%96%E9%95%BF%E6%9C%9F%E9%A1%B9%E7%9B%AE/Juejin-book-mirror%EF%BC%88%E6%8E%98%E9%87%91%E5%B0%8F%E5%86%8C%E9%95%9C%E5%83%8F%EF%BC%89/.github/workflows/generate.yml#26%2C20-26%2C20) associative array. The script uses spaces as delimiters to separate filenames, which causes problems when filenames themselves contain spaces. This is evident from the erroneous splitting of filenames like "掘金小册 Electron + Vue 3 桌面应用开发 笔记与实践".
+
+### Solution:
+To fix this, you should modify the script to handle filenames with spaces correctly. One way to do this is by using a different delimiter that is unlikely to be part of a filename, such as the null character `\0`. However, since Bash does not handle null characters in strings well, you can use another character like [|](file:///e%3A/100%20%E9%A1%B9%E7%9B%AE/130%20%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/132%20%E5%85%B6%E4%BB%96%E4%B8%AD%E6%9C%9F%E6%88%96%E9%95%BF%E6%9C%9F%E9%A1%B9%E7%9B%AE/Juejin-book-mirror%EF%BC%88%E6%8E%98%E9%87%91%E5%B0%8F%E5%86%8C%E9%95%9C%E5%83%8F%EF%BC%89/.github/workflows/generate.yml#24%2C7-24%2C7) as a delimiter.
+
+Here's the corrected part of the script:
+
+```yaml:.github/workflows/generate.yml
+    - name: Generate index.html
+      run: |
+        declare -A files
+        while IFS= read -r -d '' file; do
+          dir=$(dirname "$file")
+          files["$dir"]+="$file|"
+        done < <(find . -name '*.html' -print0)
+
+        echo "<html><body>" > index.html
+        for dir in "${!files[@]}"; do
+          echo "<h2>${dir#./}</h2><ul>" >> index.html
+          IFS='|' read -r -a filenames <<< "${files[$dir]}"
+          for file in "${filenames[@]}"; do
+            echo "<li><a href='https://bairihai.github.io/Juejin-book-mirror/${file#./}'>${file#./}</a></li>" >> index.html
+          done
+          echo "</ul>" >> index.html
+        done
+        echo "</body></html>" >> index.html
+```
+
+### Explanation:
+- The `files["$dir"]+="$file|"` line appends each filename followed by a `|` to the list of files in the directory.
+- The `IFS='|'` setting before reading filenames ensures that filenames containing spaces are handled correctly as a single unit.
+
+This change should resolve the issue with filenames being incorrectly split and ensure that each filename is treated as a whole entity, preserving spaces and other characters.
 
 
 
