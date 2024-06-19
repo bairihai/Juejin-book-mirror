@@ -35,7 +35,7 @@ jobs:
           IFS='|' read -r -a filenames <<< "${files[$dir]}"
           IFS=$'\n' sorted_filenames=($(sort <<< "${filenames[*]}"))
           for file in "${sorted_filenames[@]}"; do
-            echo "<li><a href='https://bairihai.github.io/Juejin-book-mirror/${file#./}'>${file#./}</a></li>" >> index.html
+            echo "<li style="color:#EBE5D8;background:#4F576A"><a href='https://bairihai.github.io/Juejin-book-mirror/${file#./}'>${file#./}</a></li>" >> index.html
           done
           echo "</ul>" >> index.html
         done
@@ -43,6 +43,7 @@ jobs:
     # 生成一个索引文件，列出所有HTML文件的链接，并按目录分类
     # 修改脚本以正确处理带空格的文件名
     # Sort filenames before generating list items
+    # 美化链接颜色
 
     - name: Create and push to a new branch
       run: |
