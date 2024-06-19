@@ -29,7 +29,9 @@ jobs:
           files["$dir"]+="$file|"
         done < <(find . -name '*.html' -print0)
 
-        echo "<html><body>" > index.html
+        echo "<html><head><style>" > index.html
+        echo "a { color: #4F576A; }" >> index.html
+        echo "</style></head><body>" >> index.html
         for dir in "${!files[@]}"; do
           echo "<h2>${dir#./}</h2><ul>" >> index.html
           IFS='|' read -r -a filenames <<< "${files[$dir]}"
@@ -43,6 +45,7 @@ jobs:
     # 生成一个索引文件，列出所有HTML文件的链接，并按目录分类
     # 修改脚本以正确处理带空格的文件名
     # Sort filenames before generating list items
+    # 美化链接颜色
 
     - name: Create and push to a new branch
       run: |
