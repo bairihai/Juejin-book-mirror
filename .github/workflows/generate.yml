@@ -28,17 +28,18 @@ jobs:
           dir=$(dirname "$file")
           files["$dir"]+="$file "
         done < <(find . -name '*.html' -print0)
-    
+
         echo "<html><body>" > index.html
         for dir in "${!files[@]}"; do
           echo "<h2>${dir#./}</h2><ul>" >> index.html
-          for file in ${files[$dir]}; do
+          IFS=' ' read -r -a filenames <<< "${files[$dir]}"
+          for file in "${filenames[@]}"; do
             echo "<li><a href='https://bairihai.github.io/Juejin-book-mirror/${file#./}'>${file#./}</a></li>" >> index.html
           done
           echo "</ul>" >> index.html
         done
         echo "</body></html>" >> index.html
-    # 生成一个索引文件，列出所有HTML文件的链接，并按目录分类   
+    # 生成一个索引文件，列出所有HTML文件的链接，并按目录分类
 
     - name: Create and push to a new branch
       run: |

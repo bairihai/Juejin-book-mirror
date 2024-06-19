@@ -144,8 +144,15 @@ Allow GitHub Actions to create and approve pull requests
 
 默认的页面是index.js。不再需要用 xxx.io/xxx/ 这样的格式。
 
-
 ## 3.0年代：私域集成CI/CD
+
+### github repo重命名
+
+仓库rename之后你还有充足的时间慢慢修改原本的链接引入。
+
+gtihub会保存原本的链接，重定向到新的仓库。
+
+你有很长很长一段时间，留意的时候慢慢改就行了。
 
 ### 对action进行迭代以增强其兼容性。
 
@@ -170,11 +177,83 @@ Allow GitHub Actions to create and approve pull requests
 # 生成一个索引文件，列出所有HTML文件的链接，并按目录分类bash
 ```
 
-
 这段代码首先创建一个关联数组 `files`，然后使用 `find`命令查找所有的HTML文件。对于每个文件，它获取文件的目录名，并将文件添加到该目录的数组元素中。然后，它遍历所有的目录，并为每个目录生成一个标题和一个包含该目录中所有文件链接的列表。`${dir#./}`和 `${file#./}`是bash参数扩展，它们从变量的值中删除开头的 `./`，以生成正确的链接。
 
-
-
 这样一来，原本一个仓库只能放一个小册——现在，一个仓库可以放无数小册。
+
+
+当然了，可能还需要调教一下。
+
+>
+> 对不起，我明白了。问题出在这一行代码上：
+>
+> **for** **file** **in** $**{**files**[**$dir**]**}**; **do
+>
+> 这行代码会将 `${files[$dir]}`中的每个空格分隔的字符串视为一个单独的文件。这就是为什么文件名中的每个单词都被视为一个单独的文件的原因。
+>
+> 我们可以通过将这行代码更改为使用数组迭代来解决这个问题。首先，我们需要在添加文件名到数组时使用数组语法，然后在迭代文件名时使用数组语法。以下是修改后的代码：
+>
+> **- **name**: **Generate index.html
+>
+> **  **run**: **|
+>
+> **    declare -A files**
+>
+> **    while IFS= read -r -d '' file; do**
+>
+> **      dir=$(dirname "$file")**
+>
+> **      files["$dir"]+="$file "**
+>
+> **    done < <(find . -name '*.html' -print0)**
+>
+> **    echo "`<html><body>`" > index.html**
+>
+> **    for dir in "${!files[@]}"; do**
+>
+> **      echo "`<h2>`${dir#./}`</h2><ul>`" >> index.html**
+>
+> **      IFS=' ' read -r -a filenames <<< "${files[$d**ir]}"
+>
+> **      for file in "${filenames[@]}"; do**
+>
+> **        echo "`<li><a href='https://bairihai.github**.io/Juejin-book-mirror/${file#./}'>`${file#./}`</a>`<**/li>" >> index.html**
+>
+> **      done**
+>
+> **      echo "`</ul>`" >> index.html**
+>
+> **    done**
+>
+> **    echo "`</body></html>`" >> index.html**
+>
+> **# 生成一个索引文件，列出所有HTML文件的链接，并按目录分类**
+>
+> 这段代码现在应该能正确处理包含空格的文件名了。
+
+```bash
+- name: Generate index.html
+  run: |
+    declare -A files
+    while IFS= read -r -d '' file; do
+      dir=$(dirname "$file")
+      files["$dir"]+="$file "
+    done < <(find . -name '*.html' -print0)
+
+    echo "<html><body>" > index.html
+    for dir in "${!files[@]}"; do
+      echo "<h2>${dir#./}</h2><ul>" >> index.html
+      IFS=' ' read -r -a filenames <<< "${files[$dir]}"
+      for file in "${filenames[@]}"; do
+        echo "<li><a href='https://bairihai.github.io/Juejin-book-mirror/${file#./}'>${file#./}</a></li>" >> index.html
+      done
+      echo "</ul>" >> index.html
+    done
+    echo "</body></html>" >> index.html
+# 生成一个索引文件，列出所有HTML文件的链接，并按目录分类
+```
+
+
+
 
 ### 用action自动化部署page
