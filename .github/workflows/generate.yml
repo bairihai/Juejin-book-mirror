@@ -13,21 +13,32 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2  # 检出代码
 
-    - name: Remove JavaScript files
+    - name: Remove JavaScript files 
       run: find . -type f -name '*.js' -delete  # 删除所有.js文件
 
     # - name: Replace text in HTML files
     #   run: |
     #     find . -maxdepth 1 -type f -name '*.html' -exec sed -i 's|<img src="./|<img src="https://page.jituc.cn/juejin/Node + React 实战：从 0 到 1 实现记账本/|g' {} +
-    # 在一级目录下的HTML文件中替换指定文本
+    # 在一级目录下的HTML文件中替换指定文本，以修正图片链接
 
     - name: Generate index.html
       run: |
-        echo "<html><body><ul>" > index.html
-        for file in *.html; do
-          echo "<li><a href='https://bairihai.github.io/Juejin-visResumeMook/$file'>$file</a></li>" >> index.html
+        declare -A files
+        while IFS= read -r -d '' file; do
+          dir=$(dirname "$file")
+          files["$dir"]+="$file "
+        done < <(find . -name '*.html' -print0)
+    
+        echo "<html><body>" > index.html
+        for dir in "${!files[@]}"; do
+          echo "<h2>${dir#./}</h2><ul>" >> index.html
+          for file in ${files[$dir]}; do
+            echo "<li><a href='https://bairihai.github.io/Juejin-book-mirror/${file#./}'>${file#./}</a></li>" >> index.html
+          done
+          echo "</ul>" >> index.html
         done
-        echo "</ul></body></html>" >> index.html
+        echo "</body></html>" >> index.html
+    # 生成一个索引文件，列出所有HTML文件的链接，并按目录分类   
 
     - name: Create and push to a new branch
       run: |
@@ -36,10 +47,10 @@ jobs:
         git checkout -b gh-pages
         git add .
         git commit -m "Automated changes by GitHub Actions"
-        git push -f https://${{ secrets.GH_BRH_REPO_TOKEN }}@github.com/bairihai/Juejin-visResumeMook.git HEAD
-      # 提交更改并强制推送到新的分支
-      # 需要先修改仓库里的github action权限
-      # git checkout -b deploy-branch-$(date +%Y%m%d-%H%M)  # 原本是创建以日期和时间命名的新分支，最后可能分支太多，不太好管理，所以就专用一个分支了
+        git push -f https://${{ secrets.GH_BRH_REPO_TOKEN }}@github.com/bairihai/Juejin-book-mirror.git HEAD
+    # 提交更改并强制推送到新的分支
+    # 需要先修改仓库里的github action权限
+    # git checkout -b deploy-branch-$(date +%Y%m%d-%H%M)  # 原本是创建以日期和时间命名的新分支，最后可能分支太多，不太好管理，所以就专用一个分支了
 
     # - name: Deploy to Server
     #   uses: appleboy/scp-action@master
