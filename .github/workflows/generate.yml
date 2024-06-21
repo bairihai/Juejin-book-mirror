@@ -31,6 +31,7 @@ jobs:
 
         echo "<html><head><style>" > index.html
         echo "a { color: #4F576A; }" >> index.html
+        echo "li { margin-bottom: 10px; }" >> index.html 
         echo "</style></head><body>" >> index.html
         for dir in "${!files[@]}"; do
           echo "<h2>${dir#./}</h2><ul>" >> index.html
@@ -45,7 +46,7 @@ jobs:
     # 生成一个索引文件，列出所有HTML文件的链接，并按目录分类
     # 修改脚本以正确处理带空格的文件名
     # Sort filenames before generating list items
-    # 美化链接颜色
+    # 美化链接颜色 增加行间距
 
     - name: Create and push to a new branch
       run: |
