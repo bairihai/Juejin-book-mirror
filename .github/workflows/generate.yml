@@ -31,19 +31,21 @@ jobs:
 
         echo "<html><head><style>" > index.html
         echo "a { color: #4F576A; }" >> index.html
-        echo "li { margin-bottom: 10px; }" >> index.html 
+        echo "li { margin-bottom: 10px; }" >> index.html
         echo "</style></head><body>" >> index.html
         for dir in "${!files[@]}"; do
           echo "<h2>${dir#./}</h2><ul>" >> index.html
           IFS='|' read -r -a filenames <<< "${files[$dir]}"
           IFS=$'\n' sorted_filenames=($(sort <<< "${filenames[*]}"))
           for file in "${sorted_filenames[@]}"; do
-            echo "<li><a href='https://bairihai.github.io/Juejin-book-mirror/${file#./}'>${file#./}</a></li>" >> index.html
+            basename_file=$(basename "$file")
+            echo "<li><a href='https://bairihai.github.io/Juejin-book-mirror/${file#./}'>$basename_file</a></li>" >> index.html
           done
           echo "</ul>" >> index.html
         done
         echo "</body></html>" >> index.html
     # 生成一个索引文件，列出所有HTML文件的链接，并按目录分类
+    # 提取文件基本名并，不显示所处文件夹名称
     # 修改脚本以正确处理带空格的文件名
     # Sort filenames before generating list items
     # 美化链接颜色 增加行间距
