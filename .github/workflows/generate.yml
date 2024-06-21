@@ -50,6 +50,8 @@ jobs:
     # Sort filenames before generating list items
     # 美化链接颜色 增加行间距
 
+    # todo:思考，这里可不可以用相对路径，好还是坏？
+
     - name: Create and push to a new branch
       run: |
         git config --global user.name 'bairihai'
