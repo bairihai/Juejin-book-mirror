@@ -45,7 +45,7 @@
 
 您可以通过本仓库的page链接立即开始阅读。
 
-[点击这里开始阅读](https://bairihai.github.io/Juejin-visResumeMook/)
+[点击这里开始阅读](https://page.jituc.com/)
 
 这将要跳转到这些小册的目录。由github action自动生成。
 
